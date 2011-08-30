@@ -8,8 +8,9 @@
 
 (function(window, undefined) {
 
-	var History = window.History || undefined, Route = window.Route = window.Route
-			|| {};
+	var 
+        History = window.History || undefined, 
+        Route = window.Route = window.Route	|| {};
 
 	// Check Existence
 	if (typeof Route.init !== 'undefined') {
@@ -85,19 +86,36 @@
 				url = State.url, 
 				relativeUrl = url.replace(Route.rootUrl, ''), 
 				matchUrl = relativeUrl ? '/'+relativeUrl	: '/';
-			
-			Route.routes[matchUrl]();
+		    
+            if(typeof Route.routes[matchUrl] !== 'function'){
+                Route.errorHandlers.invalidRoute();
+            } else {
+                Route.routes[matchUrl]();
+            }
 		};
+        
+        /**
+        * Route.errorHandlers
+        *
+        * Object containing error handling routes. This should be overwritten
+        * by the developer.
+        * @return
+        **/
+        Route.errorHandlers = {
+            invalidRoute: function(){
+                var body = window.document.getElementsByTagName('body');
+                body[0].innerHTML = '<h1>Invalid Route</h1>';
+            }
+        };
 
 		/**
 		 * Attach History pushState to onClick events
 		 */
 		Route.attachStateChangeEvents = function() {
-			links = document.getElementsByTagName('a');
+			links = window.document.getElementsByTagName('a');
 			for ( var i = 0; i < links.length; i++) {
 				links[i].onclick = function() {
 					var title = this.title, url = this.href;
-
 					History.pushState(undefined, title, url);
 					return false;
 				};
