@@ -39,28 +39,6 @@
 		Route.rootUrl = History.getRootUrl();
 
 		/**
-		 * Route.run(routes) 
-		 * 
-		 * Starts the router listening to statechanges in the
-		 * location bar and routes the existing url
-		 * 
-		 * @param {Object} routes - Map of urls and their resources
-		 * @return
-		 */
-		Route.run = function(routes) {
-			// Set Routes
-			Route.addRoutes(routes || {});
-
-			// Route initial url
-			Route.dispatch();
-
-			// Listen for statechanges
-			History.Adapter.bind(window, 'statechange', function() {
-				Route.dispatch();
-			});
-		};
-
-		/**
 		 * Route.addRoute(routes) 
 		 * 
 		 * Adds routes to the route table. Will overwrite
@@ -121,6 +99,11 @@
 				};
 			}
 		};
+
+        // Listen for statechanges
+        History.Adapter.bind(window, 'statechange', function() {
+            Route.dispatch();
+        });
 	};
 
 	Route.init();
