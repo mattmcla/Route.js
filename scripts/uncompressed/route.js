@@ -39,19 +39,60 @@
 		Route.rootUrl = History.getRootUrl();
 
 		/**
-		 * Route.addRoute(routes) 
+		 * Route.addRoutes(routes) 
 		 * 
 		 * Adds routes to the route table. Will overwrite
 		 * existing routes.
 		 * 
 		 * @param {Object} routes - Map of urls and their resources
-		 * @return
+		 * @return {true}
 		 */
 		Route.addRoutes = function(routes) {
-			for (prop in routes) {
-				Route.routes[prop] = routes[prop];
+			var routeTable = Route.routes;
+            
+            for (url in routes) {
+                // Validate is function
+                if(typeof routes[url] !== 'function') {
+                    throw new Error('Route.addRoutes: ');
+                }
+                
+                // Add Route to route table
+				routeTable[url] = routes[url];
 			}
 		};
+
+        /**
+        * Route.addRoute(url, action)
+        *
+        * Add a single route to the route table. Will overwirte existing 
+        * route of the same key
+        *
+        * @param {string} url - url template
+        * @param {function} action - method to call
+        *
+        * @return {true}
+        **/
+        Route.addRoute = function(url, action) {
+            if(typeof action !== 'function') {
+                throw new Error('Route.addRoute: param action must be a function');
+            }
+
+            Route.routes[url] = action;
+            return true;
+        };
+
+        /**
+        * Route.removeRoute(url)
+        *
+        * Remove a route from the route table.
+        *
+        * @param {string} url - url to remove
+        * 
+        * @returns
+        **/
+        Route.removeRoute = function(url) {
+            delete Route.routes[url];
+        }
 
 		/**
 		 * Route.dispatch() 
@@ -88,6 +129,9 @@
 
 		/**
 		 * Attach History pushState to onClick events
+         * 
+         * @todo I feel like there's a better way to do this, it's worth a
+         * revisit.
 		 */
 		Route.attachStateChangeEvents = function() {
 			links = window.document.getElementsByTagName('a');
