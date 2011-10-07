@@ -7,3 +7,11 @@ Status
 ------
 
 Currently this is a major work in progress and not recomended for use. However, I'm totally open to feed back!
+
+Change Log
+----------
+
+*v0.01*
+ - Add single, or batch of routes to the route table.
+ - Remove single route from route table.
+ - Simple routes are dispatched to mapped functions.
