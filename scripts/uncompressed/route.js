@@ -59,6 +59,7 @@
                 // Add Route to route table
 				routeTable[url] = routes[url];
 			}
+            return true;
 		};
 
         /**
